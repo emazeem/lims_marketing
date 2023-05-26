@@ -25,7 +25,7 @@
                                     <div class="tab-content" id="v-pills-tabContent">
                                         <ul class="nav nav-tabs" id="myTab" role="tablist">
                                             <li class="nav-item">
-                                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Home</a>
+                                                <a class="nav-link active" id="home-tab" data-toggle="tab" href="#home" role="tab" aria-controls="home" aria-selected="true">Countries</a>
                                             </li>
                                             <li class="nav-item">
                                                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Add Email List</a>
@@ -35,7 +35,26 @@
                                             </li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
-                                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">...</div>
+                                            <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
+                                                <table class="table table-striped">
+                                                    <tr>
+                                                        <th>Country</th>
+                                                        <th>Action</th>
+                                                    </tr>
+                                                    @foreach(\App\Models\Country::all() as $country)
+                                                        <tr>
+                                                            <td>
+                                                                {{$country->name}}
+                                                            </td>
+                                                            <td>
+                                                                <a href="" class="btn btn-dark">Show</a>
+                                                            </td>
+                                                        </tr>
+
+                                                    @endforeach
+
+                                                </table>
+                                            </div>
                                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
                                                 <div class="card">
@@ -54,7 +73,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab">...</div>
+                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
                                         </div>
                                     </div>
                                 </div>
