@@ -8,6 +8,7 @@ use App\Http\Controllers\EmailController;
 Route::get('/', function () {return view('welcome');});
 Route::get('/email-template', function () {return view('email_template');});
 Route::post('store-emails', [EmailController::class,'store'])->name('store-emails');
+Route::get('show-emails/{id}', [EmailController::class,'show'])->name('emails.show');
 Route::post('email-submit', function (Request $request) {
     try {
         $subject=$request->subject;

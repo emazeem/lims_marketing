@@ -30,9 +30,6 @@
                                             <li class="nav-item">
                                                 <a class="nav-link" id="profile-tab" data-toggle="tab" href="#profile" role="tab" aria-controls="profile" aria-selected="false">Add Email List</a>
                                             </li>
-                                            <li class="nav-item">
-                                                <a class="nav-link" id="contact-tab" data-toggle="tab" href="#contact" role="tab" aria-controls="contact" aria-selected="false">Contact</a>
-                                            </li>
                                         </ul>
                                         <div class="tab-content" id="myTabContent">
                                             <div class="tab-pane fade show active" id="home" role="tabpanel" aria-labelledby="home-tab">
@@ -47,7 +44,7 @@
                                                                 {{$country->name}}
                                                             </td>
                                                             <td>
-                                                                <a href="" class="btn btn-dark">Show</a>
+                                                                <a href="{{url('show-emails/'.$country->id)}}" class="btn btn-dark">Show</a>
                                                             </td>
                                                         </tr>
 
@@ -58,12 +55,30 @@
                                             <div class="tab-pane fade" id="profile" role="tabpanel" aria-labelledby="profile-tab">
 
                                                 <div class="card">
-                                                    <div class="col-2">
+                                                    <div class="offset-md-4 col-md-4 col-12">
                                                         <form action="{{route('store-emails')}}" method="post">
                                                             @csrf
+
                                                             <div class="form-group">
+                                                                <label for="option">Select an Option</label>
+                                                                <select class="form-control" id="option" name="option">
+                                                                    <option selected disabled >-- Select an Option</option>
+                                                                    <option value="0">New Country</option>
+                                                                    <option value="1">Existing Country</option>
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="form-group new-country" style="display: none">
                                                                 <label for="country">Country</label>
                                                                 <input type="text" class="form-control" name="country" id="country">
+                                                            </div>
+                                                            <div class="form-group existing-countries" style="display:none;">
+                                                                <label for="country_id">Select Country</label>
+                                                                <select class="form-control" id="country_id" name="country_id">
+                                                                    @foreach(\App\Models\Country::all() as $country)
+                                                                        <option value="{{$country->id}}">{{$country->name}}</option>
+                                                                    @endforeach
+                                                                </select>
                                                             </div>
                                                             <label for="emails">Email List</label>
                                                             <textarea class="form-control" cols="1" rows="30" id="emails" name="emails"></textarea>
@@ -73,7 +88,6 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="tab-pane fade" id="contact" role="tabpanel" aria-labelledby="contact-tab"></div>
                                         </div>
                                     </div>
                                 </div>
@@ -85,82 +99,20 @@
         </div>
     </div>
     <script>
-        for (instance in CKEDITOR.instances) {
-            CKEDITOR.instances[instance].updateElement();
-        }
+
         $(function () {
-            $('.email-select-2').select2();
-            CKEDITOR.replace('message', {
-                toolbar: [
-                    {
-                        name: 'document',
-                        groups: ['mode', 'document', 'doctools'],
-                        items: ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']
-                    },
-                    {
-                        name: 'basicstyles',
-                        groups: ['basicstyles', 'cleanup'],
-                        items: ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']
-                    },
-                    {
-                        name: 'paragraph',
-                        groups: ['list', 'indent', 'blocks', 'align', 'bidi'],
-                        items: ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-', 'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl', 'Language']
-                    },
-                    {name: 'links', items: ['Link', 'Unlink', 'Anchor']},
-                    {
-                        name: 'insert',
-                        items: ['Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']
-                    },
-                    {name: 'styles', items: ['Styles', 'Format', 'Font', 'FontSize']},
-                    {name: 'colors', items: ['TextColor', 'BGColor']},
-                    {name: 'tools', items: ['Maximize', 'ShowBlocks']},
-                    {name: 'others', items: ['-']},
-
-                ]
-            });
-
-            $('#email-form').on('submit', function (e) {
-                for (instance in CKEDITOR.instances) {
-                    CKEDITOR.instances[instance].updateElement();
-                }
-                e.preventDefault();
-
-                var button=$('.send-email-btn');
-                var previous=$('.send-email-btn').html();
-                button.attr('disabled','disabled').html('<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Processing');
-
-                if ($('#subject').val()=='' || $('#message').val()==''){
-                    var message='';
-                    if ($('#subject').val()==''){
-                        message+='Subject field is required.*';
-                    }
-                    if ($('#message').val()==''){
-                        message+='Message field is required.*';
-                    }
-                    if ($('#email').val()==''){
-                        message+='To field is required.*';
-                    }
-                    derror(message);
-                    button.attr('disabled',null).html(previous);
-                }else {
-                    $('#overlay-bg').addClass('overlay-bg');
-                    $('.progress').show();
-                    $('.progress-btn').show();
-                    $('.progress-text').show();
-                    var all_mails=$('#email').val();
-                    var total=all_mails.length;
-                    $.each(all_mails,function (i,v) {
-                        $('#index').val(v);
-                        sendEmail(i,total,v);
-                    });
-                    button.attr('disabled',null).html(previous);
+            $('#option').change(function (){
+                var value=$(this).val();
+                if(value=='0'){
+                    $('.new-country').show();
+                    $('.existing-countries').hide();
+                }else{
+                    $('.new-country').hide();
+                    $('.existing-countries').show();
                 }
             });
         });
-        function derror(message) {
-            swal("Failed", message, "error");
-        }
+
     </script>
 </div>
 </body>
