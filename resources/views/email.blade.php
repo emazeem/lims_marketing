@@ -29,9 +29,10 @@
                                                 {{$country->name}}
                                             </td>
                                         </tr>
-                                        @foreach($country->emails as $email)
+                                        @foreach($country->emails as $k=>$email)
                                             <tr>
                                                 <td>
+                                                    {{$k+1}} >
                                                     @if($email->status==0)
                                                         ✗
                                                     @else

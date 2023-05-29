@@ -41,7 +41,7 @@ class EmailCommand extends Command
                 $dbRow->save();
                 echo $dbRow->email.'('.$dbRow->id.')';
             } catch (\Exception $exception) {
-                return response()->json($exception->getMessage());
+                return $exception->getMessage();
             }
         }
     }
