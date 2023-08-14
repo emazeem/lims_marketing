@@ -29,7 +29,7 @@ class EmailCommand extends Command
      */
     public function handle()
     {
-        foreach (Email::where('status',0)->get() as $dbRow){
+        foreach (Email::where('status',0)->where('is_favourite',0)->get() as $dbRow){
             try {
                 $data = array('name'=>"Muhammad Azeem","message"=>"Message");
                 Mail::send('email_template', $data, function($message) use($dbRow) {
@@ -41,6 +41,7 @@ class EmailCommand extends Command
                 $dbRow->save();
                 echo $dbRow->email.'('.$dbRow->id.')';
             } catch (\Exception $exception) {
+                dd($exception->getMessage());
                 return $exception->getMessage();
             }
         }

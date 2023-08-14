@@ -16,6 +16,8 @@ return new class extends Migration
             $table->integer('country_id');
             $table->string('email');
             $table->integer('status')->default(0);
+            $table->integer('is_favourite')->default(0);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

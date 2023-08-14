@@ -8,7 +8,10 @@ use App\Http\Controllers\EmailController;
 Route::get('/', function () {return view('welcome');});
 Route::get('/email-template', function () {return view('email_template');});
 Route::post('store-emails', [EmailController::class,'store'])->name('store-emails');
+Route::get('send-again/{country}', [EmailController::class,'sendAgain'])->name('send.again');
 Route::get('show-emails/{id}', [EmailController::class,'show'])->name('emails.show');
+Route::get('email/delete/{id}', [EmailController::class,'delete'])->name('emails.delete');
+Route::get('add-favourite/{id}', [EmailController::class,'addFavourite'])->name('emails.add.favourite');
 Route::post('email-submit', function (Request $request) {
     try {
         $subject=$request->subject;
